@@ -8,8 +8,8 @@ from analysis import morris
 
 
 if __name__ == '__main__':
-    # file_name = 'factorSpace.csv'
-    file_name = os.path.join('factorSpace', 'i_factor_space.csv')
+    file_name = 'i_factor_space.csv'
+    file_name = os.path.join('factorSpace', file_name)
     samples_number = 100
     f_names, f_low_bounds, f_up_bounds = read_input_file(file_name)
     model_input_factors = ModelInputFactors(f_names, f_low_bounds, f_up_bounds)
