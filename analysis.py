@@ -17,7 +17,6 @@ def compute_mu_star_conf(ee, conf_level, resamples, traj_num, seed=None):
 
 
 def get_increased_values(op_vec, up, lo):
-
     up = np.pad(up, ((0, 0), (1, 0), (0, 0)), 'constant')
     lo = np.pad(lo, ((0, 0), (0, 1), (0, 0)), 'constant')
 
@@ -27,7 +26,6 @@ def get_increased_values(op_vec, up, lo):
 
 
 def get_decreased_values(op_vec, up, lo):
-
     up = np.pad(up, ((0, 0), (0, 1), (0, 0)), 'constant')
     lo = np.pad(lo, ((0, 0), (1, 0), (0, 0)), 'constant')
 

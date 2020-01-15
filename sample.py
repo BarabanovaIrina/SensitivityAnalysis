@@ -8,12 +8,12 @@ def scale_sample(sample, l_bounds, u_bounds):
     Generate scaled sample within real problem bounds
 
     """
-    scaled_sample = (u_bounds-l_bounds) * sample
+    scaled_sample = (u_bounds - l_bounds) * sample
     scaled_sample += l_bounds
     return scaled_sample
 
 
-def lhc_sample(number_of_samples: int, input_params: Container, seed=None):
+def lhc_sample(number_of_samples: int, input_params: Container, seed=None) -> np.array:
     """
     Generate a set of samples with Latin Hypercube sample method
 
@@ -33,7 +33,7 @@ def lhc_sample(number_of_samples: int, input_params: Container, seed=None):
 
     for i in range(number_of_params):
         for j in range(number_of_samples):
-            temporary_result[j] = np.random.uniform(low=j*levels_num, high=(j+1)*levels_num)
+            temporary_result[j] = np.random.uniform(low=j * levels_num, high=(j + 1) * levels_num)
 
         np.random.shuffle(temporary_result)
         result[:, i] = temporary_result

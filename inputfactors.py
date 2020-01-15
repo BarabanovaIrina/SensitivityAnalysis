@@ -1,6 +1,7 @@
 from abc import ABC
 import pandas as pd
 import numpy as np
+from typing import List
 
 
 class ModelInputFactor(ABC):
@@ -16,7 +17,7 @@ class ModelInputFactor(ABC):
 
 class Container:
 
-    def __init__(self, factors_list: list):
+    def __init__(self, factors_list: List[ModelInputFactor]):
         self.names = np.array([factors_list[i].name for i in range(len(factors_list))])
         self.l_bounds = np.array([factors_list[i].low_bound for i in range(len(factors_list))])
         self.u_bounds = np.array([factors_list[i].upper_bound for i in range(len(factors_list))])
@@ -31,7 +32,7 @@ def read_input_file(file: str) -> tuple:
     return names, lower_bounds, upper_bounds
 
 
-def make_input_factors_container(names: np.array, l_bounds: np.array, up_bounds: np.array) -> list:
+def make_input_factors_container(names: np.array, l_bounds: np.array, up_bounds: np.array) -> List[ModelInputFactor]:
     result = list()
     for i in range(len(names)):
         factor = ModelInputFactor(names[i], l_bounds[i], up_bounds[i])
