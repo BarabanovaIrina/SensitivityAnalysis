@@ -2,20 +2,13 @@ import numpy as np
 from scipy.stats import norm
 
 
-class Result(dict):
-    def __init__(self, *args, **kwargs):
-        super(Result, self).__init__(*args, **kwargs)
-
-
-def compute_mu_star_conf(ee, conf_level, resamples, traj_num):
-    ee_resampled = np.zeros([traj_num])
-    mu_star_resampled = np.zeros([resamples])
+def compute_mu_star_conf(ee, conf_level, resamples, traj_num, seed=None):
+    np.random.seed(seed)
 
     if not 0 < conf_level < 1:
         raise ValueError("Confidence level must be between 0-1.")
 
-    resample_index = np.random.randint(
-        len(ee), size=(resamples, traj_num))
+    resample_index = np.random.randint(len(ee), size=(resamples, traj_num))
     ee_resampled = ee[resample_index]
     # Compute average of the absolute values over each of the resamples
     mu_star_resampled = np.average(np.abs(ee_resampled), axis=1)
@@ -67,31 +60,31 @@ def morris(input_params, sample_input, sample_output, resamples=1000, num_levels
     if seed:
         np.random.seed(seed)
 
-    if sample_input.dtype not in ['float', 'float32', 'float64']:
-        raise ValueError(f"{sample_input} data type should be float, float32 or float64")
-    if sample_output.dtype not in ['float', 'float32', 'float64']:
-        raise ValueError(f"{sample_output} data type should be float, float32 or float64")
+    sample_input.astype('float64')
+    sample_output.astype('float64')
 
     params_number = input_params.size
     delta = num_levels / (2.0 * (num_levels - 1))
 
     num_trajectories = int(sample_output.size / (params_number + 1))
-    # elementary_effect = np.zeros((params_number, num_trajectories))
     elementary_effect = evaluate_elem_effect(sample_input,
                                              sample_output,
                                              num_trajectories,
                                              delta)
-    Si = Result((k, [None]*input_params.size) for k in ['names', 'mu', 'mu_star', 'sigma', 'mu_star_conf'])
 
-    Si['names'] = input_params.name
-    Si['mu'] = np.average(elementary_effect, 1)
-    Si['mu_star'] = np.average(np.abs(elementary_effect), 1)
-    Si['sigma'] = np.std(elementary_effect, axis=1, ddof=1)
+    si = dict()
+    si['names'] = input_params.names
+    si['mu'] = np.average(elementary_effect, 1)
+    si['mu_star'] = np.average(np.abs(elementary_effect), 1)
+    si['sigma'] = np.std(elementary_effect, axis=1, ddof=1)
+    si['mu_star_conf'] = list()
 
     for i in range(params_number):
-        Si['mu_star_conf'][i] = compute_mu_star_conf(elementary_effect[i, :],
-                                                           conf_level,
-                                                           resamples,
-                                                           num_trajectories)
+        i_star = compute_mu_star_conf(elementary_effect[i, :],
+                                      conf_level,
+                                      resamples,
+                                      num_trajectories)
 
-    return Si
+        si['mu_star_conf'].append(i_star)
+
+    return si

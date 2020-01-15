@@ -1,16 +1,22 @@
 import numpy as np
 
+from inputfactors import Container
+
 
 def scale_sample(sample, l_bounds, u_bounds):
     """
-    Generate sample in-place within real problem bounds
+    Generate scaled sample within real problem bounds
 
     """
-    np.add(np.multiply(sample, (u_bounds-l_bounds), out=sample), l_bounds, out=sample)
+    scaled_sample = (u_bounds-l_bounds) * sample
+    scaled_sample += l_bounds
+    return scaled_sample
 
 
-def latin_sample(number_of_samples: int, input_params, seed=None):
+def lhc_sample(number_of_samples: int, input_params: Container, seed=None):
     """
+    Generate a set of samples with Latin Hypercube sample method
+
     :param number_of_samples:
     :param input_params: class example with all parameters' names and bounds
     :param seed:
@@ -20,20 +26,18 @@ def latin_sample(number_of_samples: int, input_params, seed=None):
     if seed:
         np.random.seed(seed)
 
-    number_of_params = input_params.size
+    number_of_params: int = input_params.size
     result: np.array = np.zeros([number_of_samples, number_of_params])
-    temp = np.zeros([number_of_samples])
-    d = 1.0/number_of_samples
+    temporary_result = np.zeros([number_of_samples])
+    levels_num = 1.0 / number_of_samples
 
     for i in range(number_of_params):
         for j in range(number_of_samples):
-            temp[j] = np.random.uniform(low=j*d,
-                                        high=(j+1)*d, size=1)[0]
+            temporary_result[j] = np.random.uniform(low=j*levels_num, high=(j+1)*levels_num)
 
-        np.random.shuffle(temp)
-        for j in range(number_of_samples):
-            result[j, i] = temp[j]
+        np.random.shuffle(temporary_result)
+        result[:, i] = temporary_result
 
-    scale_sample(result, input_params.low_bound, input_params.upper_bound)
+    scaled_result = scale_sample(result, input_params.l_bounds, input_params.u_bounds)
 
-    return result
+    return scaled_result
