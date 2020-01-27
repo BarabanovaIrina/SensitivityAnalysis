@@ -1,2 +1,2 @@
-# SensitivityAnalysis
+# SensitivityAnalysis [![Coverage Status](https://coveralls.io/repos/github/BarabanovaIrina/SensitivityAnalysis/badge.svg?branch=master)](https://coveralls.io/github/BarabanovaIrina/SensitivityAnalysis?branch=master)[![Build Status](https://travis-ci.com/BarabanovaIrina/SensitivityAnalysis.svg?branch=master)](https://travis-ci.com/BarabanovaIrina/SensitivityAnalysis)
 Implementation of sensitivity analysis methods

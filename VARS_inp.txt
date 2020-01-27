@@ -1,0 +1,23 @@
+% <><><><>            Variogram Analysis of Response Surfaces (VARS) Main Input File           <><><><>
+% <><><>             © Saman Razavi 2018; V1 written in 2013-15; V2 written in 2017-18           <><><><>
+% <><>          Do not change row numbers and orders. Any text after % is deemed comments          <><><><>
+% <>                VARS-TOOL will scale factors in range zero to one before analysis                <><><><>
+HBV_out
+100
+0.1
+0.1  0.3  0.5
+eval_HBV_SASK
+../HBV-SASK
+                
+LHS
+123456789
+1
+1000
+0.9
+0
+0
+1
+10
+1
+1
+1
